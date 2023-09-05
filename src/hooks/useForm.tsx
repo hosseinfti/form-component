@@ -31,7 +31,7 @@ export const useForm = (initialFormData: { [field: string]: string }) => {
   const [formData, setFormData] = useState<formDataType>(
     createFormInitialData(initialFormData)
   );
-  const [errors, setErrors] = useState();
+  const [errors, setErrors] = useState<formErrorType>();
 
   const handleChange = (field: string, value: string) => {
     if (isEqual(value, formData[field].value)) {
