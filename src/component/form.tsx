@@ -1,7 +1,7 @@
 import React from "react";
 import { formDataType, useForm } from "../hooks/useForm";
 
-const form = () => {
+const Form = () => {
   const initialFormData = {
     username: "",
     password: "",
@@ -25,4 +25,4 @@ const form = () => {
   );
 };
 
-export default form;
+export default Form;
