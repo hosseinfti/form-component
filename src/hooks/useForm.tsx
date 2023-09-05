@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import isEqual from "lodash/isEqual";
+import * as yup from "yup";
 
 interface formFieldType {
   name: string;
@@ -27,11 +28,15 @@ const createFormInitialData = (initialValues: { [field: string]: string }) => {
   return initialData;
 };
 
-export const useForm = (initialFormData: { [field: string]: string }) => {
+export const useForm = (
+  initialFormData: { [field: string]: string },
+  validationSchema: yup.Schema<formFieldType>,
+  onSubmit: (submitData: formDataType) => void
+) => {
   const [formData, setFormData] = useState<formDataType>(
     createFormInitialData(initialFormData)
   );
-  const [errors, setErrors] = useState<formErrorType>();
+  const [errors, setErrors] = useState<formErrorType>({});
 
   const handleChange = (field: string, value: string) => {
     if (isEqual(value, formData[field].value)) {

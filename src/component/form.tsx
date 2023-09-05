@@ -9,8 +9,25 @@ const Form = () => {
     email: "",
   };
 
-  const { formData, errors, handleChange, handleSubmit } =
-    useForm(initialFormData);
+  const validationSchema = {
+    username: yup.string().required("username is required"),
+    password: yup.string().required("password is required"),
+    email: yup
+      .string()
+      .email("Please enter a valid email")
+      .required("email is required"),
+  };
+
+  const onSubmit = (formData: formDataType) => {
+    // do something you want after click submit
+    console.log("submited data", formData);
+  };
+
+  const { formData, errors, handleChange, handleSubmit } = useForm(
+    initialFormData,
+    validationSchema,
+    onSubmit
+  );
 
   return (
     <div>
