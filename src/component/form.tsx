@@ -1,6 +1,7 @@
 import React from "react";
 import { formDataType, useForm } from "../hooks/useForm";
 import * as yup from "yup";
+import Input from "./Input";
 
 const Form = () => {
   const initialFormData = {};
@@ -25,44 +26,33 @@ const Form = () => {
     onSubmit
   );
 
+  const formFields = [
+    { placeholder: "username", name: "username", type: "text" },
+    { placeholder: "password", name: "password", type: "password" },
+    { placeholder: "email", name: "email", type: "text" },
+  ];
+
   return (
     <div>
       <form
+        data-testid="form"
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit();
         }}
       >
-        <div style={{ height: "3rem" }}>
-          <input
-            placeholder="username"
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={(e) => handleChange("username", e.target.value)}
-          />
-          <div>{errors?.username}</div>
-        </div>
-        <div style={{ height: "3rem" }}>
-          <input
-            placeholder="password"
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={(e) => handleChange("password", e.target.value)}
-          />
-          <div>{errors?.password}</div>
-        </div>
-        <div style={{ height: "3rem" }}>
-          <input
-            placeholder="email"
-            type="text"
-            name="email"
-            value={formData.email}
-            onChange={(e) => handleChange("email", e.target.value)}
-          />
-          <div>{errors?.email}</div>
-        </div>
+        {formFields.map((field) => {
+          return (
+            <Input
+              placeholder={field.placeholder}
+              type={field.type}
+              value={formData[field.name]}
+              onChange={handleChange}
+              name={field.name}
+              error={errors[field.name]}
+            />
+          );
+        })}
         <button type="submit">submit</button>
       </form>
     </div>
