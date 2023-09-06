@@ -56,8 +56,6 @@ export const useForm = (
         onSubmit(formData);
       }
     } catch (error: any) {
-      console.log({ error });
-
       const currentErrors: formErrorsType = {};
       if (error.path) {
         currentErrors[error.path] = error.message;
