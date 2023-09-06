@@ -8,46 +8,63 @@ interface formFieldType {
 }
 
 export interface formDataType {
-  [field: string]: formFieldType;
+  [field: string]: string;
 }
 
-interface formErrorType {
+interface formErrorsType {
   [field: string]: string | undefined;
 }
 
 interface validationType {
-  isValidate: boolean;
-  error: formErrorType;
+  isValid: boolean;
+  errors: formErrorsType[];
 }
 
 const createFormInitialData = (initialValues: { [field: string]: string }) => {
   let initialData: formDataType = {};
   for (let field in initialValues) {
-    initialData[field] = { name: field, value: initialValues[field] };
+    initialData[field] = initialValues[field];
   }
   return initialData;
 };
 
 export const useForm = (
   initialFormData: { [field: string]: string },
-  validationSchema: yup.Schema<formFieldType>,
+  validationSchema: yup.Schema,
   onSubmit: (submitData: formDataType) => void
 ) => {
   const [formData, setFormData] = useState<formDataType>(
     createFormInitialData(initialFormData)
   );
-  const [errors, setErrors] = useState<formErrorType>({});
+  const [errors, setErrors] = useState<formErrorsType>({});
 
   const handleChange = (field: string, value: string) => {
-    if (isEqual(value, formData[field].value)) {
+    if (!isEqual(value, formData[field])) {
       setFormData((prevState) => ({
         ...prevState,
-        [field]: { ...prevState[field], value: value },
+        [field]: value,
       }));
     }
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {
+    try {
+      const validation: validationType = await validationSchema.validate(
+        formData
+      );
+      if (validation) {
+        onSubmit(formData);
+      }
+    } catch (error: any) {
+      console.log({ error });
+
+      const currentErrors: formErrorsType = {};
+      if (error.path) {
+        currentErrors[error.path] = error.message;
+      }
+      setErrors(currentErrors);
+    }
+  };
 
   return { formData, errors, handleChange, handleSubmit };
 };
